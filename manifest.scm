@@ -1,7 +1,8 @@
 ;; manifest inspired by https://guix.gnu.org/cookbook/en/html_node/Guix-Containers.html
+;; Dependencies from: https://openwrt.org/docs/guide-user/additional-software/imagebuilder
 
 (specifications->manifest
- (list "imagebuilder-pragtich"
+ (list 
 
        ;; base
        "bash-minimal"
@@ -11,11 +12,24 @@
        ;; common tools
        "coreutils"
        "wget"
-
-       ;; build essentials
+       "file"
+       "gawk"
+       "git"
+       "gettext"
+       "rsync"
+       "unzip"
+       "python"
+       "perl"
        
+       ;; build essentials
+       "gcc-toolchain"
+       "make"
 
        ;; dependencies
-
+       "ncurses"
+       "zlib"
+       "libressl"  ;;compatible?
+       "libxslt"
+       
 
        ))

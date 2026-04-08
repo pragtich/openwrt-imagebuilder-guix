@@ -1,3 +1,3 @@
 #!/bin/bash
 
-guix shell --container 
+guix shell --container --manifest=manifest.scm

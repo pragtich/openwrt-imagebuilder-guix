@@ -13,7 +13,7 @@ FILES="files"
 
 wget -N $IMGBLDR_URL
 
-guix shell --container --manifest=manifest.scm --symlink="/usr/bin/env=bin/env" -- bash -i -s <<EOF
+guix shell --container --manifest=manifest.scm  --emulate-fhs -- bash -i -s <<EOF
 echo "Reading packages"
 declare -a PACKAGES		# space separated list; -package to exclude; auto dependencies
 source packages

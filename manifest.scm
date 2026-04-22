@@ -20,6 +20,8 @@
        "unzip"
        "python"
        "perl"
+       "tar"
+       "zstd" ; for tar
        
        ;; build essentials
        "gcc-toolchain"

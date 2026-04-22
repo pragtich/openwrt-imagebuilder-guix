@@ -5,7 +5,7 @@
  (list 
 
        ;; base
-       "bash-minimal"
+       "bash"
        "glibc-locales"
        "nss-certs"
 
@@ -22,7 +22,15 @@
        "perl"
        "tar"
        "zstd" ; for tar
-       
+       "which"
+       "grep"
+       "findutils"
+       "patch"
+       "diffutils"
+       "gzip"
+       "bzip2"
+       "util-linux" ; for getopt
+
        ;; build essentials
        "gcc-toolchain"
        "make"

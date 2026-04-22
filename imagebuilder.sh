@@ -42,6 +42,17 @@ cd $(basename $IMGBLDR_FN .tar.zst)
 
 echo "Preventative clean"
 make clean
+
+
+echo "Starting build"
+
+echo make image PROFILE="$PROFILE" PACKAGES="${PACKAGES[*]}" FILES="$MYFILES" 
+
+#make image PROFILE="$PROFILE" FILES="$MYFILES" PACKAGES="${PACKAGES[*]}"
+make image PROFILE="$PROFILE" FILES="pragtich/files" PACKAGES="${PACKAGES[*]}" 
+
+echo "Done."
+
 EOF
 
 

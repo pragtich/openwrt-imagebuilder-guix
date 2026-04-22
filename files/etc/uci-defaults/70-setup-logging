@@ -1,0 +1,15 @@
+#!/bin/sh -e
+
+rm -f /root/uci-defaults.log
+exec >/root/uci-defaults.log 2>&1
+
+echo "========================"
+echo "Cleared uci-defaults logfile /root/uci-defaults.log"
+echo
+echo "Starting uci-default setup"
+echo
+echo '-- config before:'
+uci show system
+echo
+
+exit 0

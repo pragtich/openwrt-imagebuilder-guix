@@ -1,0 +1,62 @@
+#!/bin/sh -e
+exec >>/root/uci-defaults.log 2>&1
+
+echo "================="
+echo "Setting wireless settings."
+
+uci -q batch << EOI
+set wireless.radio0=wifi-device
+set wireless.radio0.type='mac80211'
+set wireless.radio0.path='pci0000:00/0000:00:02.1/0000:01:00.0'
+set wireless.radio0.country='NL'
+set wireless.radio0.band='2g'
+set wireless.radio0.hwmode='11g'
+set wireless.radio0.txpower='20'
+set wireless.radio0.htmode='HT40'
+set wireless.radio0.channel='7'
+set wireless.radio0.disabled='0'
+
+set wireless.radio1=wifi-device
+set wireless.radio1.type='mac80211'
+set wireless.radio1.channel='36'
+set wireless.radio1.band='5g'
+set wireless.radio1.hwmode='11a'
+set wireless.radio1.path='pci0000:00/0000:00:02.5/0000:05:00.0'
+set wireless.radio1.htmode='VHT80'
+set wireless.radio1.country='NL'
+set wireless.radio1.cell_density='0'
+set wireless.radio1.disabled='0'
+
+set wireless.wifinet0=wifi-iface
+set wireless.wifinet0.ssid='PRAGTICH'
+set wireless.wifinet0.device='radio0'
+set wireless.wifinet0.key='meeko2001fiets'
+set wireless.wifinet0.ft_over_ds='1'
+set wireless.wifinet0.mode='ap'
+set wireless.wifinet0.ft_psk_generate_local='1'
+set wireless.wifinet0.ieee80211r='1'
+set wireless.wifinet0.network='lan'
+set wireless.wifinet0.encryption='psk-mixed'
+
+set wireless.wifinet1=wifi-iface
+set wireless.wifinet1.device='radio1'
+set wireless.wifinet1.mode='ap'
+set wireless.wifinet1.network='lan'
+set wireless.wifinet1.ft_over_ds='1'
+set wireless.wifinet1.key='meeko2001fiets'
+set wireless.wifinet1.encryption='psk2'
+set wireless.wifinet1.ft_psk_generate_local='1'
+set wireless.wifinet1.ieee80211r='1'
+set wireless.wifinet1.ssid='PRAGTICH'
+set wireless.wifinet1.wps_pushbutton='1'
+
+delete wireless.default_radio0
+delete wireless.default_radio1
+
+commit wireless
+EOI
+
+
+echo '-- config after:'
+uci show wireless
+echo

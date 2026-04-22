@@ -1,0 +1,77 @@
+#!/bin/sh -e
+exec >>/root/uci-defaults.log 2>&1
+
+echo "Setting DHCP settings."
+
+uci -q batch << EOI
+
+set dhcp.@dnsmasq[0]=dnsmasq
+set dhcp.@dnsmasq[0].domainneeded='1'
+set dhcp.@dnsmasq[0].localise_queries='1'
+set dhcp.@dnsmasq[0].rebind_protection='1'
+set dhcp.@dnsmasq[0].rebind_localhost='1'
+set dhcp.@dnsmasq[0].local='/lan/'
+set dhcp.@dnsmasq[0].expandhosts='1'
+set dhcp.@dnsmasq[0].authoritative='1'
+set dhcp.@dnsmasq[0].readethers='1'
+set dhcp.@dnsmasq[0].leasefile='/tmp/dhcp.leases'
+set dhcp.@dnsmasq[0].localservice='1'
+set dhcp.@dnsmasq[0].domain='home.arpa'
+set dhcp.@dnsmasq[0].resolvfile='/tmp/resolv.conf.d/resolv.conf.auto'
+set dhcp.lan=dhcp
+set dhcp.lan.interface='lan'
+set dhcp.lan.start='100'
+set dhcp.lan.limit='150'
+set dhcp.lan.leasetime='12h'
+set dhcp.lan.dhcpv6='server'
+set dhcp.lan.ra='server'
+set dhcp.lan.ra_management='1'
+set dhcp.lan.netmask='255.255.255.0'
+set dhcp.lan.dhcp_option='6,1.1.1.1,1.0.0.1,8.8.8.8,10.0.0.1'
+set dhcp.wan=dhcp
+set dhcp.wan.interface='wan'
+set dhcp.wan.ignore='1'
+set dhcp.odhcpd=odhcpd
+set dhcp.odhcpd.maindhcp='0'
+set dhcp.odhcpd.leasefile='/tmp/hosts/odhcpd'
+set dhcp.odhcpd.leasetrigger='/usr/sbin/odhcpd-update'
+set dhcp.odhcpd.loglevel='4'
+set dhcp.@host[0]=host
+set dhcp.@host[0].mac='00:80:92:8D:B6:0E'
+set dhcp.@host[0].name='brother'
+set dhcp.@host[0].dns='1'
+set dhcp.@host[0].ip='10.0.0.70'
+set dhcp.@host[1]=host
+set dhcp.@host[1].mac='00:11:32:2d:b6:7c'
+set dhcp.@host[1].name='Trapkast'
+set dhcp.@host[1].dns='1'
+set dhcp.@host[1].ip='10.0.0.99'
+set dhcp.@host[2]=host
+set dhcp.@host[2].mac='00:1E:06:42:DC:C7'
+set dhcp.@host[2].dns='1'
+set dhcp.@host[2].duid='0004d41602d8a8b7720376a163b4462b0e78'
+set dhcp.@host[2].ip='10.0.0.98'
+set dhcp.@host[2].name='blue'
+set dhcp.@host[3]=host
+set dhcp.@host[3].name='homeassistant'
+set dhcp.@host[3].mac='52:54:00:A3:15:36'
+set dhcp.@host[3].ip='10.0.0.97'
+set dhcp.@host[4]=host
+set dhcp.@host[4].name='LibreELEC'
+set dhcp.@host[4].ip='10.0.0.218'
+set dhcp.@host[4].mac='00:1E:06:33:E4:E2'
+set dhcp.@host[5]=host
+set dhcp.@host[5].name='PlayFi-Play-Fi-Device--2C6B95-'
+set dhcp.@host[5].ip='10.0.0.220'
+set dhcp.@host[5].mac='62:B6:06:2C:6B:95'
+set dhcp.@host[6]=host
+set dhcp.@host[6].ip='10.0.0.184'
+set dhcp.@host[6].mac='0C:CA:FB:11:ED:23'
+
+commit dhcp
+EOI
+
+
+echo '-- config after:'
+uci show dhcp
+echo

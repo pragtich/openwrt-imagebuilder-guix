@@ -1,0 +1,18 @@
+#!/bin/sh -e
+exec >>/root/uci-defaults.log 2>&1
+# Setup login password and SSH 
+
+echo "================="
+echo "Setting login settings."
+uci -q batch << EOI
+
+set dropbear.main.Interface='lan'
+
+
+commit dropbear
+EOI
+
+echo '-- config after:'
+uci show dropbear
+echo
+

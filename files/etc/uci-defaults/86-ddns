@@ -1,0 +1,33 @@
+#!/bin/sh -e
+exec >>/root/uci-defaults.log 2>&1
+
+echo "================="
+echo "Setting DDNS settings."
+
+uci -q batch << EOI
+
+set ddns.global=ddns
+set ddns.global.ddns_dateformat='%F %R'
+set ddns.global.ddns_loglines='250'
+set ddns.global.upd_privateip='0'
+set ddns.myddns_ipv4=service
+set ddns.myddns_ipv4.interface='wan'
+set ddns.myddns_ipv4.ip_source='network'
+set ddns.myddns_ipv4.ip_network='wan'
+set ddns.myddns_ipv4.lookup_host='home.pragti.ch'
+set ddns.myddns_ipv4.retry_unit='minutes'
+set ddns.myddns_ipv4.enabled='1'
+set ddns.myddns_ipv4.update_url='https://freedns.afraid.org/dynamic/update.php?S3ZqTHBCSGNXNEMydFk2OElqYW06MTk2MzYyNjI='
+set ddns.myddns_ipv4.use_https='1'
+set ddns.myddns_ipv4.check_interval='6'
+set ddns.myddns_ipv4.check_unit='hours'
+set ddns.myddns_ipv4.force_interval='14'
+set ddns.myddns_ipv4.force_unit='days'
+
+commit ddns
+EOI
+
+
+echo '-- config after:'
+uci show ddns
+echo

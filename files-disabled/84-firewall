@@ -1,0 +1,152 @@
+#!/bin/sh -e
+exec >>/root/uci-defaults.log 2>&1
+
+echo "================="
+echo "Setting firewall settings."
+
+uci -q batch << EOI
+
+set firewall.@defaults[0]=defaults
+set firewall.@defaults[0].input='ACCEPT'
+set firewall.@defaults[0].output='ACCEPT'
+set firewall.@defaults[0].forward='REJECT'
+set firewall.@defaults[0].synflood_protect='1'
+set firewall.lan=zone
+set firewall.lan.name='lan'
+set firewall.lan.input='ACCEPT'
+set firewall.lan.output='ACCEPT'
+set firewall.lan.forward='ACCEPT'
+add_list firewall.lan.network='lan'
+set firewall.wan=zone
+set firewall.wan.name='wan'
+set firewall.wan.input='REJECT'
+set firewall.wan.output='ACCEPT'
+set firewall.wan.forward='REJECT'
+set firewall.wan.masq='1'
+set firewall.wan.mtu_fix='1'
+add_list firewall.wan.network='wan'
+
+
+
+set firewall.@rule[0]=rule
+set firewall.@rule[0].name='Allow-DHCP-Renew'
+set firewall.@rule[0].src='wan'
+set firewall.@rule[0].proto='udp'
+set firewall.@rule[0].dest_port='68'
+set firewall.@rule[0].target='ACCEPT'
+set firewall.@rule[0].family='ipv4'
+set firewall.@rule[1]=rule
+set firewall.@rule[1].name='Allow-Ping'
+set firewall.@rule[1].src='wan'
+set firewall.@rule[1].proto='icmp'
+set firewall.@rule[1].icmp_type='echo-request'
+set firewall.@rule[1].family='ipv4'
+set firewall.@rule[1].target='ACCEPT'
+set firewall.@rule[2]=rule
+set firewall.@rule[2].name='Allow-IGMP'
+set firewall.@rule[2].src='wan'
+set firewall.@rule[2].proto='igmp'
+set firewall.@rule[2].family='ipv4'
+set firewall.@rule[2].target='ACCEPT'
+set firewall.@rule[3]=rule
+set firewall.@rule[3].name='Allow-DHCPv6'
+set firewall.@rule[3].src='wan'
+set firewall.@rule[3].proto='udp'
+set firewall.@rule[3].src_ip='fc00::/6'
+set firewall.@rule[3].dest_ip='fc00::/6'
+set firewall.@rule[3].dest_port='546'
+set firewall.@rule[3].family='ipv6'
+set firewall.@rule[3].target='ACCEPT'
+set firewall.@rule[4]=rule
+set firewall.@rule[4].name='Allow-MLD'
+set firewall.@rule[4].src='wan'
+set firewall.@rule[4].proto='icmp'
+set firewall.@rule[4].src_ip='fe80::/10'
+set firewall.@rule[4].icmp_type='130/0' '131/0' '132/0' '143/0'
+set firewall.@rule[4].family='ipv6'
+set firewall.@rule[4].target='ACCEPT'
+set firewall.@rule[5]=rule
+set firewall.@rule[5].name='Allow-ICMPv6-Input'
+set firewall.@rule[5].src='wan'
+set firewall.@rule[5].proto='icmp'
+set firewall.@rule[5].icmp_type='echo-request' 'echo-reply' 'destination-unreachable' 'packet-too-big' 'time-exceeded' 'bad-header' 'unknown-header-type' 'router-solicitation' 'neighbour-solicitation' 'router-advertisement' 'neighbour-advertisement'
+set firewall.@rule[5].limit='1000/sec'
+set firewall.@rule[5].family='ipv6'
+set firewall.@rule[5].target='ACCEPT'
+set firewall.@rule[6]=rule
+set firewall.@rule[6].name='Allow-ICMPv6-Forward'
+set firewall.@rule[6].src='wan'
+set firewall.@rule[6].dest='*'
+set firewall.@rule[6].proto='icmp'
+set firewall.@rule[6].icmp_type='echo-request' 'echo-reply' 'destination-unreachable' 'packet-too-big' 'time-exceeded' 'bad-header' 'unknown-header-type'
+set firewall.@rule[6].limit='1000/sec'
+set firewall.@rule[6].family='ipv6'
+set firewall.@rule[6].target='ACCEPT'
+set firewall.@rule[7]=rule
+set firewall.@rule[7].name='Allow-IPSec-ESP'
+set firewall.@rule[7].src='wan'
+set firewall.@rule[7].dest='lan'
+set firewall.@rule[7].proto='esp'
+set firewall.@rule[7].target='ACCEPT'
+set firewall.@rule[8]=rule
+set firewall.@rule[8].name='Allow-ISAKMP'
+set firewall.@rule[8].src='wan'
+set firewall.@rule[8].dest='lan'
+set firewall.@rule[8].dest_port='500'
+set firewall.@rule[8].proto='udp'
+set firewall.@rule[8].target='ACCEPT'
+set firewall.@include[0]=include
+set firewall.@include[0].path='/etc/firewall.user'
+set firewall.ovpn=rule
+set firewall.ovpn.name='Allow-OpenVPN'
+set firewall.ovpn.src='wan'
+set firewall.ovpn.dest_port='1194'
+set firewall.ovpn.proto='udp'
+set firewall.ovpn.target='ACCEPT'
+set firewall.@redirect[0]=redirect
+set firewall.@redirect[0].dest_port='6881'
+set firewall.@redirect[0].src='wan'
+set firewall.@redirect[0].name='Bittorrent'
+set firewall.@redirect[0].src_dport='6881'
+set firewall.@redirect[0].target='DNAT'
+set firewall.@redirect[0].dest_ip='10.0.0.99'
+set firewall.@redirect[0].dest='lan'
+set firewall.@zone[2]=zone
+set firewall.@zone[2].name='vpn'
+set firewall.@zone[2].input='ACCEPT'
+set firewall.@zone[2].network='VPN'
+set firewall.@zone[2].output='ACCEPT'
+set firewall.@zone[2].forward='ACCEPT'
+set firewall.@forwarding[1]=forwarding
+set firewall.@forwarding[1].dest='wan'
+set firewall.@forwarding[1].src='vpn'
+set firewall.@forwarding[2]=forwarding
+set firewall.@forwarding[2].dest='lan'
+set firewall.@forwarding[2].src='vpn'
+set firewall.@forwarding[3]=forwarding
+set firewall.@forwarding[3].dest='vpn'
+set firewall.@forwarding[3].src='lan'
+set firewall.@rule[10]=rule
+set firewall.@rule[10].src_port='5353'
+set firewall.@rule[10].src='*'
+set firewall.@rule[10].name='Allow mDNS'
+set firewall.@rule[10].target='ACCEPT'
+set firewall.@rule[10].dest_ip='224.0.0.251'
+set firewall.@rule[10].dest_port='5353'
+set firewall.@rule[10].proto='udp'
+set firewall.@rule[11]=rule
+set firewall.@rule[11].name='Allow-OpenVPN-from-lan'
+set firewall.@rule[11].src='lan'
+set firewall.@rule[11].dest_port='1194'
+set firewall.@rule[11].target='ACCEPT'
+set firewall.@rule[11].proto='udp'
+
+commit firewall
+
+EOI
+
+
+
+echo '-- config after:'
+uci show firewall
+echo

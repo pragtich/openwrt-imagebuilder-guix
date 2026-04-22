@@ -1,0 +1,61 @@
+#!/bin/sh -e
+exec >>/root/uci-defaults.log 2>&1
+
+# The first half runs on the first run
+echo "============================="
+echo "Resizing root partition."
+if [ ! -e /etc/rootpt-resize ] \
+&& type parted > /dev/null \
+#&& lock -n /var/lock/rootpt-resize
+then
+    BOOT_DEV="$(sed -n -e "\|\s/boot\s.*$|{s///p;q}" /etc/mtab)"
+    BOOT_PART="${BOOT_DEV##*[^0-9]}"
+    DISK_DEV="${BOOT_DEV%${BOOT_PART}}"
+    parted -l ---pretend-input-tty << EOI
+ok
+fix
+EOI
+    parted -s "${DISK_DEV%p}" resizepart "$((BOOT_PART+1))" 100%
+    touch /etc/rootpt-resize
+    sync
+#    lock -u /var/lock/rootpt-resize
+    echo "Rebooting now (1/2)."
+    reboot
+else
+    echo "Did not meet requirements for resizing (1/2)."
+fi
+
+# After this point we are on the 2nd run through
+echo "Resizing root filesystem (2nd boot)."
+sync
+echo "sleeping for 10s"
+
+sleep 10
+if [ ! -e /etc/rootfs-resize ] \
+&& [ -e /etc/rootpt-resize ] \
+&& type losetup > /dev/null \
+&& type resize2fs > /dev/null \
+#&& lock -n /var/lock/rootpt-resize
+then
+    BOOT_DEV="$(sed -n -e "\|\s/boot\s.*$|{s///p;q}" /etc/mtab)"
+    BOOT_PART="${BOOT_DEV##*[^0-9]}"
+    DISK_DEV="${BOOT_DEV%${BOOT_PART}}"
+    ROOT_DEV="${DISK_DEV}$((BOOT_PART+1))"
+    ROOT_TYPE="$(ubus call system board \
+| jsonfilter -e "$['rootfs_type']")"
+case "${ROOT_TYPE}" in
+    (ext4) LOOP_DEV="$(losetup -f)"
+    losetup "${LOOP_DEV}" "${ROOT_DEV}" ;;
+    (squashfs) LOOP_DEV="$(losetup -n -l \
+| sed -n -e "\|\s.*\s${ROOT_DEV#/dev}\s.*$|{s///p;q}")" ;;
+esac
+resize2fs -f "${LOOP_DEV}"
+touch /etc/rootfs-resize
+echo "Rebooting now (2/2)."
+reboot
+else
+    echo "Did not meet requrements for resizing filesystem (2/2)."
+fi
+echo "Finished resizing root partition."
+echo "========================"
+exit 0

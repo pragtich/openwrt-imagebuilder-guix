@@ -8,12 +8,13 @@ IMGBLDR_URL="https://downloads.openwrt.org/releases/${REL}/targets/${ARCH}/${VAR
 
 wget -N $IMGBLDR_URL
 
-guix shell --container --manifest=manifest.scm -- bash -s <<EOF
+guix shell --container --manifest=manifest.scm --symlink="/usr/bin/env=bin/env" -- bash -i -s <<EOF
 echo "Decompressing"
 tar --zstd -xvf $IMGBLDR_FN
 cd $(basename $IMGBLDR_FN .tar.zst)
 
-
+echo "Preventative clean"
+make clean
 EOF
 
 

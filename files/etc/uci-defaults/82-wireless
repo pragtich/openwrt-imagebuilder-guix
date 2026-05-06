@@ -1,7 +1,11 @@
 #!/bin/sh -e
 exec >>/root/uci-defaults.log 2>&1
 
+echo "================="
+echo "Reading secrets."
+
 unset -v SSID WIFIPASS
+source /etc/secrets || exit
 
 echo "================="
 echo "Setting wireless settings."

@@ -29,6 +29,7 @@
        "diffutils"
        "gzip"
        "bzip2"
+       "xz"
        "util-linux" ; for getopt
 
        ;; build essentials

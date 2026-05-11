@@ -1,9 +1,9 @@
 #!/bin/bash
 
-REL="23.05.6"
+REL="25.12.2"
 ARCH="x86"
 VARIANT="64"
-IMGBLDR_FN="openwrt-imagebuilder-${REL}-${ARCH}-${VARIANT}.Linux-${ARCH}_${VARIANT}.tar.xz"
+IMGBLDR_FN="openwrt-imagebuilder-${REL}-${ARCH}-${VARIANT}.Linux-${ARCH}_${VARIANT}.tar.zst"
 IMGBLDR_URL="https://downloads.openwrt.org/releases/${REL}/targets/${ARCH}/${VARIANT}/${IMGBLDR_FN}"
 
 PROFILE="generic"		# make info: the only option for x86/64
@@ -19,8 +19,8 @@ declare -a PACKAGES		# space separated list; -package to exclude; auto dependenc
 source packages
 
 echo "Decompressing"
-tar  -xvf $IMGBLDR_FN
-cd $(basename $IMGBLDR_FN .tar.xz)
+tar --zstd  -xvf $IMGBLDR_FN
+cd $(basename $IMGBLDR_FN .tar.zst)
 
 echo "Preventative clean"
 make clean

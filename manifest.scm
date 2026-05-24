@@ -34,6 +34,7 @@
 
        ;; build essentials
        "gcc-toolchain"
+
        "make"
 
        ;; dependencies

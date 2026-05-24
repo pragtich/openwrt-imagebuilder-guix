@@ -15,7 +15,7 @@ mkdir -p ${PWD}/tmp
 
 wget -N $IMGBLDR_URL
 
-guix shell --manifest=manifest.scm --network --share=${PWD}/tmp --share=/tmp -- bash -i -s <<EOF
+guix shell --manifest=manifest.scm --network --share=${PWD}/tmp --share=/tmp -- bash  -s <<EOF
 echo "Reading packages"
 declare -a PACKAGES		# space separated list; -package to exclude; auto dependencies
 source packages

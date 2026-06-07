@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REL="25.12.3"
+REL="25.12.4"
 ARCH="x86"
 VARIANT="64"
 IMGBLDR_FN="openwrt-imagebuilder-${REL}-${ARCH}-${VARIANT}.Linux-${ARCH}_${VARIANT}.tar.zst"

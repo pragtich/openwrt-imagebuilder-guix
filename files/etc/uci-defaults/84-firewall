@@ -1,0 +1,44 @@
+#!/bin/sh -e
+exec >>/root/uci-defaults.log 2>&1
+
+echo "================="
+echo "Setting firewall settings."
+
+uci -q batch << EOI
+
+uci add firewall forwarding
+
+uci set firewall.@forwarding[-1].name='tailscale2lan'
+uci set firewall.@forwarding[-1].src='tailscale'
+uci set firewall.@forwarding[-1].dest='lan'
+
+uci add firewall forwarding
+
+uci set firewall.@forwarding[-1].name='tailscale2wan'
+uci set firewall.@forwarding[-1].src='tailscale'
+uci set firewall.@forwarding[-1].dest='wan'
+
+uci add firewall forwarding
+
+uci set firewall.@forwarding[-1].name='lan2tailscale'
+uci set firewall.@forwarding[-1].src='lan'
+uci set firewall.@forwarding[-1].dest='tailscale'
+
+uci add firewall redirect
+
+uci set firewall.@redirect[-1].name='syno BitTorrent'
+uci set firewall.@redirect[-1].target='DNAT'
+uci set firewall.@redirect[-1].src='wan'
+uci set firewall.@redirect[-1].src_dport='6881'
+uci set firewall.@redirect[-1].dest='lan'
+uci set firewall.@redirect[-1].dest_ip='10.0.0.99'
+uci set firewall.@redirect[-1].dest_port='6881'
+
+commit firewall
+
+EOI
+
+
+echo '-- config after:'
+uci show firewall
+echo

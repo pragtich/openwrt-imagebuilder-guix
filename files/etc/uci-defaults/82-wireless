@@ -44,8 +44,8 @@ set wireless.wifinet0.network='lan'
 set wireless.wifinet0.encryption='psk-mixed'
 EOI
 
-uci set wireless.wifinet0.ssid=\'$SSID\'
-uci set wireless.wifinet0.key=\'$WIFIPASS\'
+uci set wireless.wifinet0.ssid="$SSID"
+uci set wireless.wifinet0.key="$WIFIPASS"
 
 uci -q batch << EOI
 set wireless.wifinet1=wifi-iface

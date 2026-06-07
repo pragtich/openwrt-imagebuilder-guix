@@ -20,8 +20,9 @@ echo "Reading packages"
 declare -a PACKAGES		# space separated list; -package to exclude; auto dependencies
 source packages
 
-export MAKE_TMPDIR ${PWD}/tmp
-export TMPDIR ${PWD}/tmp
+export MAKE_TMPDIR=${PWD}/tmp
+export TMPDIR=${PWD}/tmp
+export MYFILES="../files"
 
 echo "Decompressing"
 tar --zstd  -xvf $IMGBLDR_FN
@@ -33,8 +34,9 @@ mkdir tmp
 
 echo "Starting build"
 
-#make image PROFILE="$PROFILE" FILES="$MYFILES" PACKAGES="${PACKAGES[*]}"
-make image PROFILE="$PROFILE" FILES="pragtich/files" PACKAGES="${PACKAGES[*]}" 
+#echo make image PROFILE="$PROFILE" FILES="$MYFILES" PACKAGES="${PACKAGES[*]}"
+echo "${PACKAGES[*]}"
+make image PROFILE="$PROFILE" FILES="$MYFILES" PACKAGES="${PACKAGES[*]}" 
 
 echo "Done."
 

@@ -36,28 +36,28 @@ set dhcp.odhcpd.maindhcp='0'
 set dhcp.odhcpd.leasefile='/tmp/hosts/odhcpd'
 set dhcp.odhcpd.leasetrigger='/usr/sbin/odhcpd-update'
 set dhcp.odhcpd.loglevel='4'
-set dhcp.@host[0]=host
-set dhcp.@host[0].mac='00:80:92:8D:B6:0E'
-set dhcp.@host[0].name='brother928DB60E'
-set dhcp.@host[0].dns='1'
-set dhcp.@host[0].ip='10.0.0.173'
-set dhcp.@host[1]=host
-set dhcp.@host[1].name='Opslag'
-set dhcp.@host[1].ip='10.0.0.90'
-set dhcp.@host[1].mac='90:09:D0:79:10:73'
-set dhcp.@host[2]=host
-set dhcp.@host[2].mac='00:1E:06:42:DC:C7'
-set dhcp.@host[2].dns='1'
-set dhcp.@host[2].ip='10.0.0.98'
-set dhcp.@host[2].name='homeassistant'
-set dhcp.@host[3]=host
-set dhcp.@host[3].name='SynologyNAS'
-set dhcp.@host[3].ip='10.0.0.91'
-set dhcp.@host[3].mac='90:09:D0:79:10:74'
-set dhcp.@host[4]=host
-set dhcp.@host[4].name='PlayFi-Play-Fi-Device--2C6B95-'
-set dhcp.@host[4].ip='10.0.0.220'
-set dhcp.@host[4].mac='62:B6:06:2C:6B:95'
+add dhcp host
+set dhcp.@host[-1].mac='00:80:92:8D:B6:0E'
+set dhcp.@host[-1].name='brother928DB60E'
+set dhcp.@host[-1].dns='1'
+set dhcp.@host[-1].ip='10.0.0.173'
+add dhcp host
+set dhcp.@host[-1].name='Opslag'
+set dhcp.@host[-1].ip='10.0.0.90'
+set dhcp.@host[-1].mac='90:09:D0:79:10:73'
+add dhcp host
+set dhcp.@host[-1].mac='00:1E:06:42:DC:C7'
+set dhcp.@host[-1].dns='1'
+set dhcp.@host[-1].ip='10.0.0.98'
+set dhcp.@host[-1].name='homeassistant'
+add dhcp host
+set dhcp.@host[-1].name='SynologyNAS'
+set dhcp.@host[-1].ip='10.0.0.91'
+set dhcp.@host[-1].mac='90:09:D0:79:10:74'
+add dhcp host
+set dhcp.@host[-1].name='PlayFi-Play-Fi-Device--2C6B95-'
+set dhcp.@host[-1].ip='10.0.0.220'
+set dhcp.@host[-1].mac='62:B6:06:2C:6B:95'
 
 commit dhcp
 EOI

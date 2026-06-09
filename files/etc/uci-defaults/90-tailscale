@@ -1,0 +1,14 @@
+#!/bin/sh -e
+exec >>/root/uci-defaults.log 2>&1
+# Setup Tailscale
+
+echo "================="
+echo "Setting up Tailscale"
+
+tailscale update 2>&1
+tailscale up --advertise-routes 10.0.0.0/8 --advertise-exit-node --hostname=router 2>&1
+
+
+echo '-- Done'
+echo
+

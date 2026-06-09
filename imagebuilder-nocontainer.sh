@@ -7,15 +7,12 @@ export IMGBLDR_FN="openwrt-imagebuilder-${REL}-${ARCH}-${VARIANT}.Linux-${ARCH}_
 export IMGBLDR_URL="https://downloads.openwrt.org/releases/${REL}/targets/${ARCH}/${VARIANT}/${IMGBLDR_FN}"
 export IMGBLDR_PROFILE="generic"		# make info: the only option for x86/64
 
-mkdir -p ${PWD}/tmp
 wget -N $IMGBLDR_URL
 echo "Filename: $IMGBLDR_FN"
 guix shell --pure --manifest=manifest.scm --network --share=${PWD}/tmp --share=/tmp --preserve='^IMGBLDR' -- bash -s <<< $(cat packages ; cat <<'EOF' )
 echo "Package list:"
 echo "${PACKAGES[*]}"
 
-export MAKE_TMPDIR=${PWD}/tmp
-export TMPDIR=${PWD}/tmp
 export MYFILES="../files"
 echo "Filename: $IMGBLDR_FN"
 echo "Decompressing"

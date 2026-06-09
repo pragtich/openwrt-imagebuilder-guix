@@ -1,3 +1,4 @@
 secret.config
 /files/etc/secrets
 files/etc/secrets
+openwrt-imagebuilder-**

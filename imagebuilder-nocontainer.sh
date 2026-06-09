@@ -12,17 +12,15 @@ echo "${PACKAGES[*]}"
 
 echo "Downloading release."
 wget -N $IMGBLDR_URL
-guix shell --pure --manifest=manifest.scm --network --preserve='^IMGBLDR' -- bash -s <<< $(cat packages ; cat <<'EOF' )
+guix shell --pure --manifest=manifest.scm --network --preserve='^IMGBLDR' -- bash -s <<< $(cat packages ; cat <<'EOF' 
 export MYFILES="../files"
 echo "Decompressing"
 tar --zstd  -xf $IMGBLDR_FN
 cd $(basename $IMGBLDR_FN .tar.zst)
-
-echo "Preventative clean"
-make clean
+mkdir -p tmp
 
 echo "Starting build"
 make image PROFILE="$IMGBLDR_PROFILE" FILES="$MYFILES" PACKAGES="${PACKAGES[*]}"
 echo "Done."
-
 EOF
+)

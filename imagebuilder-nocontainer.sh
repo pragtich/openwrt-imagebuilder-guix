@@ -15,7 +15,7 @@ wget -N $IMGBLDR_URL
 guix shell --pure --manifest=manifest.scm --network --preserve='^IMGBLDR' -- bash -s <<< $(cat packages ; cat <<'EOF' )
 export MYFILES="../files"
 echo "Decompressing"
-tar --zstd  -xvf $IMGBLDR_FN
+tar --zstd  -xf $IMGBLDR_FN
 cd $(basename $IMGBLDR_FN .tar.zst)
 
 echo "Preventative clean"
